@@ -1,3 +1,9 @@
+
+using var db = new ChooniContext();
+
+// Note: This sample requires the database to be created before running.
+Console.WriteLine($"Database path: {db.DbPath}.");
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

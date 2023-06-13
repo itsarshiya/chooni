@@ -1,32 +1,115 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace chooni.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-public class WeatherForecastController : ControllerBase
+[Route("api/products")]
+public class ProductController : ControllerBase
 {
-    private static readonly string[] Summaries = new[]
-    {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
+    private readonly ChooniContext _context;
 
-    private readonly ILogger<WeatherForecastController> _logger;
-
-    public WeatherForecastController(ILogger<WeatherForecastController> logger)
+    public ProductController(ChooniContext context)
     {
-        _logger = logger;
+        _context = context;
     }
 
-    [HttpGet(Name = "GetWeatherForecast")]
-    public IEnumerable<WeatherForecast> Get()
+    // GET: api/products
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
     {
-        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        var products = await _context.Products
+            .Include(p => p.Category)
+            .Include(p => p.Type)
+            .Include(p => p.Colors)
+            .Include(p => p.Sizes)
+            .Include(p => p.Pictures)
+            .ToListAsync();
+
+        return Ok(products);
+    }
+
+    // GET: api/products/{id}
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Product>> GetProduct(int id)
+    {
+        var product = await _context.Products
+            .Include(p => p.Category)
+            .Include(p => p.Type)
+            .Include(p => p.Colors)
+            .Include(p => p.Sizes)
+            .Include(p => p.Pictures)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (product == null)
         {
-            Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-        })
-        .ToArray();
+            return NotFound();
+        }
+
+        return Ok(product);
+    }
+
+    // POST: api/products
+    [HttpPost]
+    public async Task<ActionResult<Product>> CreateProduct(Product product)
+    {
+        _context.Products.Add(product);
+        await _context.SaveChangesAsync();
+
+        return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
+    }
+
+    // PUT: api/products/{id}
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateProduct(int id, Product product)
+    {
+        if (id != product.Id)
+        {
+            return BadRequest();
+        }
+
+        _context.Entry(product).State = EntityState.Modified;
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!ProductExists(id))
+            {
+                return NotFound();
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        return NoContent();
+    }
+
+    // DELETE: api/products/{id}
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteProduct(int id)
+    {
+        var product = await _context.Products.FindAsync(id);
+
+        if (product == null)
+        {
+            return NotFound();
+        }
+
+        _context.Products.Remove(product);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
+
+    private bool ProductExists(int id)
+    {
+        return _context.Products.Any(p => p.Id == id);
     }
 }
