@@ -1,31 +1,26 @@
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using System;
 
-using var db = new ChooniContext();
-
-// Note: This sample requires the database to be created before running.
-Console.WriteLine($"Database path: {db.DbPath}.");
-
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+public class Program
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    public static void Main(string[] args)
+    {
+        using (var db = new ChooniContext())
+        {
+            // Note: This sample requires the database to be created before running.
+            Console.WriteLine($"Database path: {db.DbPath}.");
+        }
+
+        var host = CreateHostBuilder(args).Build();
+
+        host.Run();
+    }
+
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            });
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();

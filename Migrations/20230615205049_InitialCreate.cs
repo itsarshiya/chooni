@@ -26,7 +26,7 @@ namespace chooni.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Type",
+                name: "Types",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -36,9 +36,9 @@ namespace chooni.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Type", x => x.Id);
+                    table.PrimaryKey("PK_Types", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Type_Categories_CategoryId",
+                        name: "FK_Types_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id",
@@ -69,15 +69,15 @@ namespace chooni.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Products_Type_TypeId",
+                        name: "FK_Products_Types_TypeId",
                         column: x => x.TypeId,
-                        principalTable: "Type",
+                        principalTable: "Types",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Color",
+                name: "Colors",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -88,16 +88,16 @@ namespace chooni.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Color", x => x.Id);
+                    table.PrimaryKey("PK_Colors", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Color_Products_ProductId",
+                        name: "FK_Colors_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Picture",
+                name: "Pictures",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -108,16 +108,16 @@ namespace chooni.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Picture", x => x.Id);
+                    table.PrimaryKey("PK_Pictures", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Picture_Products_ProductId",
+                        name: "FK_Pictures_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Size",
+                name: "Sizes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
@@ -127,9 +127,9 @@ namespace chooni.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Size", x => x.Id);
+                    table.PrimaryKey("PK_Sizes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Size_Products_ProductId",
+                        name: "FK_Sizes_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id");
@@ -145,14 +145,54 @@ namespace chooni.Migrations
                     { 3, "Accessories" }
                 });
 
+            migrationBuilder.InsertData(
+                table: "Colors",
+                columns: new[] { "Id", "Hex", "Name", "ProductId" },
+                values: new object[,]
+                {
+                    { 1, "#FF0000", "Red", null },
+                    { 2, "#00FF00", "Green", null },
+                    { 3, "#0000FF", "Blue", null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Pictures",
+                columns: new[] { "Id", "AltText", "ProductId", "Url" },
+                values: new object[,]
+                {
+                    { 1, "Picture 1", null, "https://example.com/picture1.jpg" },
+                    { 2, "Picture 2", null, "https://example.com/picture2.jpg" },
+                    { 3, "Picture 3", null, "https://example.com/picture3.jpg" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Sizes",
+                columns: new[] { "Id", "Name", "ProductId" },
+                values: new object[,]
+                {
+                    { 1, "Small", null },
+                    { 2, "Medium", null },
+                    { 3, "Large", null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Types",
+                columns: new[] { "Id", "CategoryId", "Name" },
+                values: new object[,]
+                {
+                    { 1, 1, "Type 1" },
+                    { 2, 2, "Type 2" },
+                    { 3, 3, "Type 3" }
+                });
+
             migrationBuilder.CreateIndex(
-                name: "IX_Color_ProductId",
-                table: "Color",
+                name: "IX_Colors_ProductId",
+                table: "Colors",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Picture_ProductId",
-                table: "Picture",
+                name: "IX_Pictures_ProductId",
+                table: "Pictures",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
@@ -166,13 +206,13 @@ namespace chooni.Migrations
                 column: "TypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Size_ProductId",
-                table: "Size",
+                name: "IX_Sizes_ProductId",
+                table: "Sizes",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Type_CategoryId",
-                table: "Type",
+                name: "IX_Types_CategoryId",
+                table: "Types",
                 column: "CategoryId");
         }
 
@@ -180,19 +220,19 @@ namespace chooni.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Color");
+                name: "Colors");
 
             migrationBuilder.DropTable(
-                name: "Picture");
+                name: "Pictures");
 
             migrationBuilder.DropTable(
-                name: "Size");
+                name: "Sizes");
 
             migrationBuilder.DropTable(
                 name: "Products");
 
             migrationBuilder.DropTable(
-                name: "Type");
+                name: "Types");
 
             migrationBuilder.DropTable(
                 name: "Categories");

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace chooni.Migrations
 {
     [DbContext(typeof(ChooniContext))]
-    [Migration("20230613202511_InitialCreate")]
+    [Migration("20230615205049_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -72,7 +72,27 @@ namespace chooni.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Color");
+                    b.ToTable("Colors");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Hex = "#FF0000",
+                            Name = "Red"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Hex = "#00FF00",
+                            Name = "Green"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Hex = "#0000FF",
+                            Name = "Blue"
+                        });
                 });
 
             modelBuilder.Entity("Picture", b =>
@@ -96,7 +116,27 @@ namespace chooni.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Picture");
+                    b.ToTable("Pictures");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AltText = "Picture 1",
+                            Url = "https://example.com/picture1.jpg"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AltText = "Picture 2",
+                            Url = "https://example.com/picture2.jpg"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AltText = "Picture 3",
+                            Url = "https://example.com/picture3.jpg"
+                        });
                 });
 
             modelBuilder.Entity("Product", b =>
@@ -155,7 +195,24 @@ namespace chooni.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Size");
+                    b.ToTable("Sizes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Small"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Medium"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Large"
+                        });
                 });
 
             modelBuilder.Entity("Type", b =>
@@ -175,7 +232,27 @@ namespace chooni.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Type");
+                    b.ToTable("Types");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryId = 1,
+                            Name = "Type 1"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryId = 2,
+                            Name = "Type 2"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CategoryId = 3,
+                            Name = "Type 3"
+                        });
                 });
 
             modelBuilder.Entity("Color", b =>

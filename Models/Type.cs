@@ -10,6 +10,9 @@ public class Type
       [Required]
     public string Name { get; set; }
 
-      [Required]
+    [Required]
+    public int CategoryId { get; set; }
+
+    [ForeignKey("CategoryId")]
     public Category Category { get; set; }
-}
+}   

@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace chooni.Controllers;
 
@@ -53,8 +52,12 @@ public class ProductController : ControllerBase
 
     // POST: api/products
     [HttpPost]
+    [Authorize(Policy = "ApiKeyPolicy")]
     public async Task<ActionResult<Product>> CreateProduct(Product product)
     {
+        // Set the ID property to 0 to ensure it's treated as a new entity
+        product.Id = 0;
+
         _context.Products.Add(product);
         await _context.SaveChangesAsync();
 
@@ -63,6 +66,7 @@ public class ProductController : ControllerBase
 
     // PUT: api/products/{id}
     [HttpPut("{id}")]
+    [Authorize(Policy = "ApiKeyPolicy")]
     public async Task<IActionResult> UpdateProduct(int id, Product product)
     {
         if (id != product.Id)
@@ -93,6 +97,7 @@ public class ProductController : ControllerBase
 
     // DELETE: api/products/{id}
     [HttpDelete("{id}")]
+    [Authorize(Policy = "ApiKeyPolicy")]
     public async Task<IActionResult> DeleteProduct(int id)
     {
         var product = await _context.Products.FindAsync(id);
